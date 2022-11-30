@@ -1,0 +1,30 @@
+﻿@model IEnumerable<Trabajador>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">@Html.LabelFor(m => m.First().nombres)</th>
+            <th scope="col">@Html.LabelFor(m => m.First().apellidos)</th>
+            <th scope="col">@Html.LabelFor(m => m.First().tipoDocumento)</th>
+            <th scope="col">@Html.LabelFor(m => m.First().numeroDocumento)</th>
+            <th scope="col">@Html.LabelFor(m => m.First().fechaNacimiento)</th>
+            <th scope="col">@Html.LabelFor(m => m.First().estadoCivil)</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <th>@Html.DisplayFor(modelItem => item.nombres)</th>
+                <td>@Html.DisplayFor(modelItem => item.apellidos)</td>
+                <td>@Html.DisplayFor(modelItem => item.tipoDocumento)</td>
+                <td>@Html.DisplayFor(modelItem => item.numeroDocumento)</td>
+                <td>@Html.DisplayFor(modelItem => item.fechaNacimiento)</td>
+                <td>@Html.DisplayFor(modelItem => item.estadoCivil_View)</td>
+            </tr>
+        }
+    </tbody>
+</table>

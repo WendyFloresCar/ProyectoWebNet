@@ -5,8 +5,8 @@ using ProyectoBase.Data;
 var builder = WebApplication.CreateBuilder(args);
 
 //Add DbContext
-//builder.Services.AddDbContext<ProyectoDbContext>(options =>
-//    options.UseSqlServer(builder.Configuration.GetConnectionString("ServidorLocal")));
+builder.Services.AddDbContext<ProyectoDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ServidorLocal")));
 
 //builder.Services.addEntity<ProyectoDbContext>().AddDefaultTokenProviders();
 

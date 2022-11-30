@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ProyectoBase.Models.Entidades;
 
 namespace ProyectoBase.Data
 {
     public class ProyectoDbContext : DbContext
     {
-        public ProyectoDbContext(DbContextOptions<DbContext> options) : base(options)
+        public ProyectoDbContext(DbContextOptions<ProyectoDbContext> options) : base(options)
         {
         }
 
@@ -12,5 +13,8 @@ namespace ProyectoBase.Data
         {
             base.OnModelCreating(builder);
         }
+
+        public DbSet<Empresa> Empresa { get; set; }
+        public DbSet<Trabajador> Trabajador { get; set; }
     }
 }
