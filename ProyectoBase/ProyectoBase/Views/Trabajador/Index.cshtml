@@ -1,30 +1,78 @@
 ﻿@model IEnumerable<Trabajador>
 @{
     ViewData["Title"] = "Index";
+    //top -arriba
+    //end - final
+    //start - inicio
+    //bottom - abajo
 }
 
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col">@Html.LabelFor(m => m.First().nombres)</th>
-            <th scope="col">@Html.LabelFor(m => m.First().apellidos)</th>
-            <th scope="col">@Html.LabelFor(m => m.First().tipoDocumento)</th>
-            <th scope="col">@Html.LabelFor(m => m.First().numeroDocumento)</th>
-            <th scope="col">@Html.LabelFor(m => m.First().fechaNacimiento)</th>
-            <th scope="col">@Html.LabelFor(m => m.First().estadoCivil)</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <th>@Html.DisplayFor(modelItem => item.nombres)</th>
-                <td>@Html.DisplayFor(modelItem => item.apellidos)</td>
-                <td>@Html.DisplayFor(modelItem => item.tipoDocumento)</td>
-                <td>@Html.DisplayFor(modelItem => item.numeroDocumento)</td>
-                <td>@Html.DisplayFor(modelItem => item.fechaNacimiento)</td>
-                <td>@Html.DisplayFor(modelItem => item.estadoCivil_View)</td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="card">
+    <div class="card-header pt-3">
+        <div class="row col-md-12">
+            <div class="col-md-6">
+                <h4>Listado de trabajadores</h4>
+            </div>
+            <div class="col-md-6 text-end">
+                <a class="btn btn-primary">Crear trabajadores</a>
+            </div>
+        </div>
+        <br />
+    </div>
+    <div class="card-body">
+        <table class="table table-bordered table-hover" id="example">
+            <thead class="table-primary">
+                <tr>
+                    <th scope="col" class="text-center">@Html.LabelFor(m => m.First().nombres)</th>
+                    <th scope="col" class="text-center">@Html.LabelFor(m => m.First().apellidos)</th>
+                    <th scope="col" class="text-center">@Html.LabelFor(m => m.First().tipoDocumento)</th>
+                    <th scope="col" class="text-center">@Html.LabelFor(m => m.First().numeroDocumento)</th>
+                    <th scope="col" class="text-center">@Html.LabelFor(m => m.First().fechaNacimiento)</th>
+                    <th scope="col">@Html.LabelFor(m => m.First().estadoCivil)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <th class="text-center">@Html.DisplayFor(modelItem => item.nombres)</th>
+                        <td class="text-center">@Html.DisplayFor(modelItem => item.apellidos)</td>
+                        <td class="text-center">@Html.DisplayFor(modelItem => item.tipoDocumento)</td>
+                        <td class="text-center">@Html.DisplayFor(modelItem => item.numeroDocumento)</td>
+                        <td class="text-center">@Html.DisplayFor(modelItem => item.fechaNacimiento)</td>
+                        <td>@Html.DisplayFor(modelItem => item.estadoCivil_View)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+@section Scripts {
+<script>
+    //Todo metodo que este dentro se va ejecutar al iniciar la vista
+    $(document).ready(function () {
+        var table = new DataTable('#example', {
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    //Excel
+                    extend: 'excel',
+                    //Muestra solo algunas columnas
+                    exportOptions: {
+                        columns: [0, 1]
+                    },
+                    //Título del Excel
+                    title: 'Reporte de trabajadores',
+                    //Nombre excel descargado
+                    filename: 'TrabajadoresExcel'
+                }
+            ],
+            order: [[1, "desc"]],
+            language: {
+                "url": "//cdn.datatables.net/plug-ins/1.10.11/i18n/Spanish.json"
+            }
+        });
+    });
+</script>
+
+}
