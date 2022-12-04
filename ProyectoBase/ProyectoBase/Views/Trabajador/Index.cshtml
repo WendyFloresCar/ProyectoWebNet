@@ -14,65 +14,177 @@
                 <h4>Listado de trabajadores</h4>
             </div>
             <div class="col-md-6 text-end">
-                <a class="btn btn-primary">Crear trabajadores</a>
+                <a class="btn btn-primary create-dialog-window">Crear trabajadores</a>
             </div>
         </div>
         <br />
     </div>
-    <div class="card-body">
+    <div class="card-body table-responsive">
         <table class="table table-bordered table-hover" id="example">
             <thead class="table-primary">
                 <tr>
+                    <th hidden></th>
                     <th scope="col" class="text-center">@Html.LabelFor(m => m.First().nombres)</th>
                     <th scope="col" class="text-center">@Html.LabelFor(m => m.First().apellidos)</th>
                     <th scope="col" class="text-center">@Html.LabelFor(m => m.First().tipoDocumento)</th>
                     <th scope="col" class="text-center">@Html.LabelFor(m => m.First().numeroDocumento)</th>
                     <th scope="col" class="text-center">@Html.LabelFor(m => m.First().fechaNacimiento)</th>
                     <th scope="col">@Html.LabelFor(m => m.First().estadoCivil)</th>
+                    <th scope="col">@Html.LabelFor(m => m.First().Empresa.razonSocial)</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model)
                 {
                     <tr>
-                        <th class="text-center">@Html.DisplayFor(modelItem => item.nombres)</th>
+                        <td hidden>@Html.DisplayFor(modelItem => item.idTrabajador)</td>
+                        <td class="text-center">@Html.DisplayFor(modelItem => item.nombres)</td>
                         <td class="text-center">@Html.DisplayFor(modelItem => item.apellidos)</td>
                         <td class="text-center">@Html.DisplayFor(modelItem => item.tipoDocumento)</td>
                         <td class="text-center">@Html.DisplayFor(modelItem => item.numeroDocumento)</td>
                         <td class="text-center">@Html.DisplayFor(modelItem => item.fechaNacimiento)</td>
-                        <td>@Html.DisplayFor(modelItem => item.estadoCivil_View)</td>
+                        <td>@Html.DisplayFor(modelItem => item.estadoCivil_ViewSwitch)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Empresa.razonSocial)</td>
+                        <td><a class="btn btn-warning editar-dialog-window">Actualizar</a></td>
                     </tr>
                 }
             </tbody>
         </table>
     </div>
 </div>
-@section Scripts {
-<script>
-    //Todo metodo que este dentro se va ejecutar al iniciar la vista
-    $(document).ready(function () {
-        var table = new DataTable('#example', {
-            dom: 'Bfrtip',
-            buttons: [
-                {
-                    //Excel
-                    extend: 'excel',
-                    //Muestra solo algunas columnas
-                    exportOptions: {
-                        columns: [0, 1]
-                    },
-                    //Título del Excel
-                    title: 'Reporte de trabajadores',
-                    //Nombre excel descargado
-                    filename: 'TrabajadoresExcel'
-                }
-            ],
-            order: [[1, "desc"]],
-            language: {
-                "url": "//cdn.datatables.net/plug-ins/1.10.11/i18n/Spanish.json"
-            }
-        });
-    });
-</script>
+<div class="modal fade" id="CreateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title text-white" id="exampleModalLabel">Nuevo registro</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="teeee">Please wait...</div>
+            </div>
+        </div>
+    </div>
+</div>
 
+<div class="modal fade" id="EditarModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title text-white" id="exampleModalLabel">Actualizar registro</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="teeee">Please wait...</div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        //Todo metodo que este dentro se va ejecutar al iniciar la vista
+        $(document).ready(function () {
+            var table = new DataTable('#example', {
+                dom: 'Bfrtip',
+                scrollY: '50vh',
+                scrollCollapse: true,
+                buttons: [
+                    {
+                        //Excel
+                        extend: 'excel',
+                        //Muestra solo algunas columnas
+                        exportOptions: {
+                            columns: [0, 1]
+                        },
+                        //Título del Excel
+                        title: 'Reporte de trabajadores',
+                        //Nombre excel descargado
+                        filename: 'TrabajadoresExcel'
+                    }
+                ],
+                pageLength: 10,
+                order: [[7, 'asc'], [3, 'asc'], [1, "desc"]],
+                rowGroup: {
+                    dataSrc: [7, 3]
+                },
+                columnDefs: [{
+                    targets: [7, 3],
+                    visible: false
+                }],
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.11/i18n/Spanish.json"
+                }
+            });
+        });
+    </script>
+
+    <script>
+        $("body").on("click", "a.create-dialog-window", null, function (e) {
+            //realiza esta acción
+            $.get('@Url.Action("Create", "Trabajador")', { }
+              , function (response) {
+                  $('#CreateModal .teeee').html(response);
+                  $('#CreateModal').modal("show");
+            });
+        });
+    </script>
+
+    <script>
+        function ValidarInformacion() {
+            $(".errorForm").remove();
+
+            var valid = true;
+            $("#formCreateTrabajadores :input[required]").each(function () {
+                if ($(this).val() == 0 || $(this).val() == "") {
+                    valid = false;
+                    $(this).focus();
+                    $(this).after('<span class="errorForm text-danger">Completa este campo</span>');
+                    return false;
+                }
+            });
+
+            if (valid) {
+                RegistrarInformacion();
+            }
+        }
+
+        function RegistrarInformacion() {
+            var modelo = new Object();
+            $("#formCreateTrabajadores input, select, textarea").each(function () {
+                modelo[this.name] = this.value;
+            });
+            modelo["estadoCivil"] = $('input:radio[name=estadoCivil]:checked').val();
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("Create", "Trabajador")',
+                data: modelo,
+                success: function (returnedData) {
+                    //Resultado de POST
+                    window.location.reload()
+                },
+                error: function (ex) {
+                    alert('Trabajador/Create' + ex);
+                }
+             });
+        }
+    </script>
+
+    <script>
+        $("body").on("click", "a.editar-dialog-window", null, function (e) {
+            //realiza esta acción
+            var id = $(this).closest("tr").find("td").eq(0).text().trim();
+            $.get('@Url.Action("Create", "Trabajador")', { id: id }
+              , function (response) {
+                  $('#EditarModal .teeee').html(response);
+                  $('#EditarModal').modal("show");
+            });
+        });
+    </script>
+    <script>
+        $("body").on("click", ".form-check-input", null, function () {
+            $(".form-check-input").attr('checked', false);
+            $(this).attr('checked', 'checked');
+        });
+    </script>
 }

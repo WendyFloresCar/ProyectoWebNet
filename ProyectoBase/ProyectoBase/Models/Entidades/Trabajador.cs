@@ -32,8 +32,7 @@ namespace ProyectoBase.Models.Entidades
         public string direccion { get; set; }
 
         [Display(Name = "Correo")]
-        [Required(ErrorMessage = "Correo es requerido")]
-        public string correo { get; set; }
+        public string? correo { get; set; }
 
         public int idEmpresa { get; set; }
 
@@ -52,8 +51,6 @@ namespace ProyectoBase.Models.Entidades
         [ForeignKey("idEmpresa")]
         public Empresa Empresa { get; set; }
 
-        public string estadoCivil_View => estadoCivil == "S" ? "Soltero" : "Casado";
-
         public string estadoCivil_ViewSwitch
         {
             get
@@ -62,13 +59,14 @@ namespace ProyectoBase.Models.Entidades
                 {
                     case "S":
                         return "Soltero";
+
                     case "C":
                         return "Casado";
+
                     default:
                         return "Viudo";
                 }
             }
         }
-
     }
 }
