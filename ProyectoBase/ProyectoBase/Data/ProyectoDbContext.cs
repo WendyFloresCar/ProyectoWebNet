@@ -16,5 +16,7 @@ namespace ProyectoBase.Data
 
         public DbSet<Empresa> Empresa { get; set; }
         public DbSet<Trabajador> Trabajador { get; set; }
+        public DbSet<Sede> Sede { get; set; }
+        public DbSet<Area> Area { get; set; }
     }
 }

@@ -187,4 +187,22 @@
             $(this).attr('checked', 'checked');
         });
     </script>
+    <script>
+        function GetAreas() {
+            //obtener id Sede
+            var idSede = $("select[name=idSede]").val();
+
+            $.get('@Url.Action("ListAreas", "Trabajador")', { id: idSede }
+                , function (response) {
+
+                    $("select[name=idArea]").empty();
+
+                    $.each(response, function (i, data) {
+                        $("select[name=idArea]").append('<option value="' + data.idArea + '">' + data.descripcion + '</option>');
+
+                    });
+
+            });
+        }
+    </script>
 }

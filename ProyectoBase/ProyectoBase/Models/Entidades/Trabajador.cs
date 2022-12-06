@@ -51,6 +51,12 @@ namespace ProyectoBase.Models.Entidades
         [ForeignKey("idEmpresa")]
         public Empresa Empresa { get; set; }
 
+        [Display(Name = "Sede")]
+        public int? idSede { get; set; }
+
+        [Display(Name = "Área")]
+        public int? idArea { get; set; }
+
         public string estadoCivil_ViewSwitch
         {
             get
