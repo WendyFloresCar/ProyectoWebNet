@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using ProyectoBase.Data;
 using ProyectoBase.Models.Clases;
 using ProyectoBase.Models.Entidades;
+using ProyectoBase.Models.Entidades.SP;
 
 namespace ProyectoBase.Controllers
 {
@@ -16,6 +17,16 @@ namespace ProyectoBase.Controllers
             _context = context;
         }
 
+        public async Task<IActionResult> Index2()
+        {
+            var idEmpresa = 1;
+            var estadoCivil = 'S';
+            var fechaInicio = DateTime.Now.Date.AddMonths(-1);
+            var fechaFinal = DateTime.Now.Date.AddYears(1);
+            var trabajadores = await _context.sp_trabajador.FromSqlRaw("sp_trabajador @p0,@p1,@p2,@p3", idEmpresa, estadoCivil, fechaInicio.ToString("yyyy-MM-dd"), fechaFinal.ToString("yyyy-MM-dd")).ToListAsync();
+            return View(trabajadores);
+        }
+
         public async Task<IActionResult> Index()
         {
             var trabajadores = await _context.Trabajador.Include(t => t.Empresa).ToListAsync();
@@ -25,9 +36,15 @@ namespace ProyectoBase.Controllers
         public async Task<IActionResult> Create(int id)
         {
             var trabajador = new Trabajador();
+            var areasList = new List<Area>();
             if (id != 0)
             {
+                //Actualizar
                 trabajador = await _context.Trabajador.FindAsync(id);
+                if (trabajador.idSede != null)
+                {
+                    areasList = await _context.Area.Where(t => t.idSede.Equals(trabajador.idSede)).ToListAsync();
+                }
             }
             else
             {
@@ -51,7 +68,7 @@ namespace ProyectoBase.Controllers
             ViewData["cmbSede"] = new SelectList(sede.OrderBy(t => t.descripcion), "idSede", "descripcion", trabajador.idSede);
 
             //combo Area
-            var area = new List<Area>();
+            var area = areasList;
             area.Add(new Area { idArea = 0, descripcion = " Seleccione" });
             ViewData["cmbArea"] = new SelectList(area.OrderBy(t => t.descripcion), "idArea", "descripcion", trabajador.idArea);
             return PartialView(trabajador);

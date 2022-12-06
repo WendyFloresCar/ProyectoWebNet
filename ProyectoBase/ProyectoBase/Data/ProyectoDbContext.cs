@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProyectoBase.Models.Entidades;
+using ProyectoBase.Models.Entidades.SP;
 
 namespace ProyectoBase.Data
 {
@@ -18,5 +19,6 @@ namespace ProyectoBase.Data
         public DbSet<Trabajador> Trabajador { get; set; }
         public DbSet<Sede> Sede { get; set; }
         public DbSet<Area> Area { get; set; }
+        public DbSet<sp_trabajador> sp_trabajador { get; set; }
     }
 }
