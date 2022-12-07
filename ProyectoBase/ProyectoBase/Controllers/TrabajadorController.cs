@@ -17,13 +17,34 @@ namespace ProyectoBase.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index2()
+        public async Task<IActionResult> Index2(int idEmpresa, string estadoCivil, DateTime? fechaInicio, DateTime? fechaFinal)
         {
-            var idEmpresa = 1;
-            var estadoCivil = 'S';
-            var fechaInicio = DateTime.Now.Date.AddMonths(-1);
-            var fechaFinal = DateTime.Now.Date.AddYears(1);
-            var trabajadores = await _context.sp_trabajador.FromSqlRaw("sp_trabajador @p0,@p1,@p2,@p3", idEmpresa, estadoCivil, fechaInicio.ToString("yyyy-MM-dd"), fechaFinal.ToString("yyyy-MM-dd")).ToListAsync();
+            if (fechaInicio == null || fechaFinal == null)
+            {
+                fechaInicio = DateTime.Now.Date.AddMonths(-1);
+                fechaFinal = DateTime.Now.Date.AddMonths(1);
+                ViewBag.fechaInicio = fechaInicio;
+                ViewBag.fechaFinal = fechaFinal;
+            }
+            else
+            {
+                ViewBag.fechaInicio = fechaInicio;
+                ViewBag.fechaFinal = fechaFinal;
+            }
+            //Empresas
+            var empresas = _context.Empresa.ToList();
+            empresas.Add(new Empresa { idEmpresa = 0, razonSocial = " Seleccione" });
+            ViewData["cmbEmpresas"] = new SelectList(empresas.OrderBy(t => t.razonSocial), "idEmpresa", "razonSocial", idEmpresa);
+
+            //Estado Civil
+            var combo = new List<Combo>();
+            combo.Add(new Combo { codigo = "", descripcion = " Seleccione" });
+            combo.Add(new Combo { codigo = "S", descripcion = "Soltero" });
+            combo.Add(new Combo { codigo = "C", descripcion = "Casado" });
+            combo.Add(new Combo { codigo = "V", descripcion = "Viudo" });
+            ViewData["cmbEstadoCivil"] = new SelectList(combo.OrderBy(t => t.descripcion), "codigo", "descripcion", estadoCivil);
+
+            var trabajadores = await _context.sp_trabajador.FromSqlRaw("sp_trabajador @p0,@p1,@p2,@p3", idEmpresa, estadoCivil, fechaInicio.Value.ToString("yyyy-MM-dd"), fechaFinal.Value.ToString("yyyy-MM-dd")).ToListAsync();
             return View(trabajadores);
         }
 
