@@ -28,17 +28,17 @@
                 </div>
                 <label for="EstadoCivil" class="col-sm-2 col-form-label">Estado Civil</label>
                 <div class="col-sm-4">
-                    <select class="form-control form-control-sm" asp-items="ViewBag.cmbEstadoCivil"  name="estadoCivil"></select>
+                    <select class="form-control form-control-sm" asp-items="ViewBag.cmbEstadoCivil" name="estadoCivil"></select>
                 </div>
             </div>
             <div class="form-group row">
                 <label for="fechaInicio" class="col-sm-2 col-form-label">Fecha Inicio</label>
                 <div class="col-sm-4">
-                    <input type="date" value="@fechaInicioInput" class="form-control form-control-sm"  name="fechaInicio">
+                    <input type="date" value="@fechaInicioInput" class="form-control form-control-sm" name="fechaInicio">
                 </div>
                 <label for="fechaFinal" class="col-sm-2 col-form-label">Fecha Final</label>
                 <div class="col-sm-4">
-                    <input type="date" value="@fechaFinalInput" class="form-control form-control-sm"  name="fechaFinal">
+                    <input type="date" value="@fechaFinalInput" class="form-control form-control-sm" name="fechaFinal">
                 </div>
             </div>
             <br />
@@ -63,6 +63,9 @@
                     <th scope="col" class="text-center">@Html.LabelFor(m => m.First().fechaNacimiento)</th>
                     <th scope="col">@Html.LabelFor(m => m.First().estadoCivil)</th>
                     <th scope="col">@Html.LabelFor(m => m.First().razonSocial)</th>
+                    <th scope="col">@Html.LabelFor(m => m.First().estado)</th>
+                    <th></th>
+                    <th></th>
                     <th></th>
                 </tr>
             </thead>
@@ -78,7 +81,10 @@
                         <td class="text-center">@Html.DisplayFor(modelItem => item.fechaNacimiento)</td>
                         <td>@Html.DisplayFor(modelItem => item.estadoCivil)</td>
                         <td>@Html.DisplayFor(modelItem => item.razonSocial)</td>
+                        <td>@Html.DisplayFor(modelItem => item.estado)</td>
                         <td><a class="btn btn-warning editar-dialog-window">Actualizar</a></td>
+                        <td><a class="btn btn-danger delete-dialog-window">Eliminar</a></td>
+                        <td><a class="btn btn-danger" asp-action="ActivarDesactivar" asp-controller="Trabajador" asp-route-id="@item.idTrabajador">Estado</a></td>
                     </tr>
                 }
             </tbody>
@@ -112,7 +118,32 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-danger">
+                <h5 class="modal-title text-white" id="exampleModalLabel">Eliminar registro</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    ¿Esta seguro de eliminar el registro seleccionado?
+                </p>
+                <div id="response" class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @section Scripts {
+    <script>
+        $("body").on("click", "a.delete-dialog-window", null, function (e) {
+            var id = $(this).closest("tr").find("td").eq(0).text().trim();
+            var htmlContent = '<button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button><a class="btn btn-secondary" href="@Url.Action("Eliminar","Trabajador")?id=' + id + '">Si</a>';
+            $("#response").html(htmlContent);
+            $("#DeleteModal").modal("show");
+        });
+    </script>
     <script>
         //Todo metodo que este dentro se va ejecutar al iniciar la vista
         $(document).ready(function () {

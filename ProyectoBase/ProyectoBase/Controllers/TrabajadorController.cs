@@ -121,5 +121,50 @@ namespace ProyectoBase.Controllers
             areas.Add(new Area { idArea = 0, descripcion = " Seleccione" });
             return Json(areas);
         }
+
+        public async Task<IActionResult> Eliminar(int id)
+        {
+            var model = await _context.Trabajador.FindAsync(id);
+            _context.Remove(model);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index2");
+        }
+
+        public async Task<IActionResult> Activar(int id)
+        {
+            var model = await _context.Trabajador.FindAsync(id);
+            model.estado = true;
+            _context.Update(model);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index2");
+        }
+
+        public async Task<IActionResult> Desactivar(int id)
+        {
+            var model = await _context.Trabajador.FindAsync(id);
+            model.estado = false;
+
+            _context.Update(model);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index2");
+        }
+
+        public async Task<IActionResult> ActivarDesactivar(int id)
+        {
+            var model = await _context.Trabajador.FindAsync(id);
+            model.estado = (model.estado == true) ? false : true;
+            //if (model.estado == true)
+            //{
+            //    model.estado = false;
+            //}
+            //else
+            //{
+            //    model.estado = true;
+            //}
+
+            _context.Update(model);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index2");
+        }
     }
 }
