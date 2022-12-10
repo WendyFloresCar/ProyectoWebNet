@@ -84,7 +84,14 @@
                         <td>@Html.DisplayFor(modelItem => item.estado)</td>
                         <td><a class="btn btn-warning editar-dialog-window">Actualizar</a></td>
                         <td><a class="btn btn-danger delete-dialog-window">Eliminar</a></td>
-                        <td><a class="btn btn-danger" asp-action="ActivarDesactivar" asp-controller="Trabajador" asp-route-id="@item.idTrabajador">Estado</a></td>
+                        @if (item.estado)
+                        {
+                            <td><a class="btn btn-danger" asp-action="ActivarDesactivar" asp-controller="Trabajador" asp-route-id="@item.idTrabajador">Inactivar</a></td>
+                        }
+                        else
+                        {
+                            <td><a class="btn btn-success" asp-action="ActivarDesactivar" asp-controller="Trabajador" asp-route-id="@item.idTrabajador">Activar</a></td>
+                        }
                     </tr>
                 }
             </tbody>
